@@ -11,7 +11,7 @@ public:
     void GeneratePrintKey(KeyType keyType);
 
     // Generate Mod7 part for CD 10 and 11 digit keys
-    std::string Mod7Generator();
+    std::string Mod7Generator(bool firstDigitIsZero = false);
 
 private:
     // Make a true random seed

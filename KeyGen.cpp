@@ -5,7 +5,7 @@
 using namespace std;
 
 KeyGen::KeyGen() {
-    std::random_device randomDevice;
+    random_device randomDevice;
     this->seed = randomDevice();
     // Initialize random engine to make quick pseudo random int with true random seed
     this->randomEngine = default_random_engine(seed);
@@ -68,56 +68,47 @@ void KeyGen::GeneratePrintKey(KeyType keyType) {
 
     /// 20-digit OEM key
     /// Guaranteed with the Enum, so no need to check
-//
-//    // First 5-digit segment, represent key printing date
-//    // - First 3 digits is days in a year, 001 to 366 (they don't check leap year)
-//    static std::uniform_int_distribution<int> dateDist(1, 366); // Set another random limit with uni dist
-//    int temp = dateDist(randomEngine);                    // Get temp, then check, if 1 digit add 00, 2 digits add 0
-//    if (temp < 10) { key.append("00" + to_string(temp)); }
-//    else if (temp < 100) { key.append("0" + to_string(temp)); }
-//    else { key.append(to_string(temp)); }             // If full 3 digits, append to key normally
-//
-//    // - Next 2 digits is the year, 95 to 03 (95,96,97,98,99,00,01,02,03) is valid
-//    string yearArr[9] = {"95", "96", "97", "98", "99", "00", "01", "02", "03"};
-//    temp = 9;
-//    while (temp == 9) { temp = uniDist(randomEngine); }
-//
-//    key.append(yearArr[temp]);
-//
-//    // Second is OEM and the mod7 sequence again
-//    // But first character must be 0
-//    key.append("-OEM-0");
-//    int tempSum;
-//    string lastPart;
-//    do {
-//        tempSum = 0;
-//        lastPart = "";
-//        int temp;
-//        for (int i = 0; i < 6; i++) {
-//            temp = uniDist(randomEngine);
-//            tempSum += temp;
-//            lastPart.append(to_string(temp));
-//        }
-//    } while (tempSum % 7 != 0 || lastPart[5] - '0' == 0 || lastPart[5] - '0' >= 8);
-//    key.append(lastPart + "-");
-//
-//    // Last five-digit segment can be anything, so randomly created
-//    for (int i = 0; i < 5; i++) {
-//        key.append(to_string(uniDist(randomEngine)));
-//    }
-//    cout << key << endl;
-//    key = "";
+
+    // First 5-digit segment, represent key printing date
+    // - First 3 digits is days in a year, 001 to 366 (they don't check leap year)
+    static std::uniform_int_distribution<short> randomDate(1, 366);
+    short tempDate = randomDate(randomEngine);
+    // Pad the date with 0s if needed
+    if (tempDate < 10) { cout << "00" << tempDate; }
+    else if (tempDate < 100) { cout << '0' << tempDate; }
+    else cout << tempDate;
+
+    // - Next 2 digits is the year, 95 to 03 is valid
+    const char* validYear[9] = {"95", "96", "97", "98", "99", "00", "01", "02", "03"};
+    tempDate = 9;
+    while (tempDate == 9)
+        tempDate = (unsigned char) (randomDigit(randomEngine) - '0');
+
+    cout << validYear[tempDate];
+
+    // Second is -OEM- and the mod7 sequence again
+    // But first digit must be 0
+    cout << "-OEM-" << Mod7Generator(true) << '-';
+
+    // Last five-digit segment can be anything, so randomly created
+    for (char i = 0; i < 5; i++) {
+        cout << randomDigit(randomEngine);
+    }
+    cout << '\n';
 }
 
-string KeyGen::Mod7Generator() {
+string KeyGen::Mod7Generator(bool firstDigitIsZero) {
+    // Mod7 part is 7-digit long
+    char digitSum;
+    string key = "0------";
+    // If first digit is zero, generate from the next digit only
+    char firstDigitIndex = firstDigitIsZero ? 1 : 0;
+
     // Digit sum must be divisible to 7
     // Last digit must be in range [1, 7]
-    string key = "-------";
-
-    char digitSum;
     do {
         digitSum = 0;
-        for (int i = 0; i < 7; ++i) {
+        for (char i = firstDigitIndex; i < 7; ++i) {
             key[i] = randomDigit(randomEngine);
             digitSum += key[i] - '0';
         }

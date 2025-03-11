@@ -10,7 +10,7 @@ KeyGen::KeyGen() {
     // Initialize random engine to make quick pseudo random int with true random seed
     this->randomEngine = default_random_engine(seed);
     // Initialize uniform dist to limit range of random
-    this->randomDigit = uniform_int_distribution<char>('0', '9');
+    this->randomDigit = uniform_int_distribution<int>('0', '9');
 }
 
 void KeyGen::GeneratePrintKey(KeyType keyType) {

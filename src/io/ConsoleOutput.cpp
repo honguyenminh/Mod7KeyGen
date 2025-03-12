@@ -1,4 +1,5 @@
 #include "ConsoleOutput.h"
+#include <iostream>
 
 using namespace std;
 

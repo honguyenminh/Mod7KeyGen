@@ -1,4 +1,7 @@
 #include "ArgumentParser.h"
+#include "ConsoleOutput.h"
+
+#include <iostream>
 #include <string>
 
 using namespace std;

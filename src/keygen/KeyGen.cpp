@@ -1,7 +1,6 @@
 #include "KeyGen.h"
 #include <iostream>
 
-// I'm sorry
 using namespace std;
 
 KeyGen::KeyGen() {

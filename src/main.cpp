@@ -8,9 +8,8 @@ int main(int argc, char* argv[]) {
     // Operation queue
     std::vector<Operation> queue;
 
-    // TODO: reverse the result to "success" or similar
-    bool stop = TryParseArgs(argc, argv, queue);
-    if (stop) return 1;
+    const bool parsedSuccessfully = TryParseArgs(argc, argv, queue);
+    if (parsedSuccessfully) return 1;
 
     /// Generate keys and output
     KeyGen keyGen;

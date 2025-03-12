@@ -10,31 +10,31 @@ bool IsNumber(const char* str) {
     return string(str).find_first_not_of("0123456789") == string::npos;
 }
 
-// Return true if args is handled (don't run anymore)
-// False otherwise (keep running)
+// Return true if args is parsed successfully
+// If parsing throws an error, return false (don't run anymore)
 bool TryParseArgs(int argc, char **argv, vector<Operation>& queue) {
     // No argument
     if (argc <= 1) {
         cout << "Key generator for Windows 95/NT4.\n";
         cout << "GitHub: https://github.com/honguyenminh/Mod7KeyGen\n";
         cout << "Use --help or -h for more information\n";
-        return true;
+        return false;
     }
     // Help
     if (strcmp(argv[0], "--help") == 0 || strcmp(argv[0], "-h") == 0) {
         ShowHelp();
-        return true;
+        return false;
     }
 
     /// Arguments parser
     for (int i = 1; i < argc; ++i) {
         if (argv[i][0] != '-' || strlen(argv[i]) == 1) {
             InvalidArgs();
-            return true;
+            return false;
         }
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             ShowHelp();
-            return true;
+            return false;
         }
         int keyNum = 1;
         bool advanceNextArg = false;
@@ -47,7 +47,7 @@ bool TryParseArgs(int argc, char **argv, vector<Operation>& queue) {
                     keyNum = stoi(argv[i + 1]);
                 else {
                     InvalidArgs();
-                    return true;
+                    return false;
                 }
             }
         }
@@ -62,7 +62,7 @@ bool TryParseArgs(int argc, char **argv, vector<Operation>& queue) {
                 queue.emplace_back(KeyType::Oem20Digit, keyNum);
             } else {
                 InvalidArgs();
-                return true;
+                return false;
             }
         }
         // Short args (start with "-") like -t or -l
@@ -76,10 +76,10 @@ bool TryParseArgs(int argc, char **argv, vector<Operation>& queue) {
                 queue.emplace_back(KeyType::Oem20Digit, keyNum);
             } else {
                 InvalidArgs();
-                return true;
+                return false;
             }
         }
         if (advanceNextArg) i++;
     }
-    return false;
+    return true;
 }

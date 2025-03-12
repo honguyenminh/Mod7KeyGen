@@ -19,5 +19,5 @@ private:
     // Initialize random engine to make quick pseudo random int with true random seed
     std::default_random_engine randomEngine;
     // Initialize uniform dist to limit range of random
-    std::uniform_int_distribution<char> randomDigit;
+    std::uniform_int_distribution<short> randomDigit;
 };

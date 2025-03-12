@@ -10,7 +10,7 @@ KeyGen::KeyGen() {
     // Initialize random engine to make quick pseudo random int with true random seed
     this->randomEngine = default_random_engine(seed);
     // Initialize uniform dist to limit range of random
-    this->randomDigit = uniform_int_distribution<char>('0', '9');
+    this->randomDigit = uniform_int_distribution<short>('0', '9');
 }
 
 void KeyGen::GeneratePrintKey(KeyType keyType) {
@@ -99,17 +99,20 @@ void KeyGen::GeneratePrintKey(KeyType keyType) {
 
 string KeyGen::Mod7Generator(bool firstDigitIsZero) {
     // Mod7 part is 7-digit long
-    char digitSum;
+    int digitSum;
     string key = "0------";
     // If first digit is zero, generate from the next digit only
     char firstDigitIndex = firstDigitIsZero ? 1 : 0;
 
     // Digit sum must be divisible to 7
     // Last digit must be in range [1, 7]
+
+    // Generate a random key until condition is met.
+    //! This can be really slow (literally bogo-sorting)
     do {
         digitSum = 0;
         for (char i = firstDigitIndex; i < 7; ++i) {
-            key[i] = randomDigit(randomEngine);
+            key[i] = static_cast<char>(randomDigit(randomEngine));
             digitSum += key[i] - '0';
         }
     } while (digitSum % 7 != 0 || key[6] > '7' || key[6] == '0');

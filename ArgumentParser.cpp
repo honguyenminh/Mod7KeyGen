@@ -1,4 +1,5 @@
 #include "ArgumentParser.h"
+#include <string>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ bool IsNumber(const char* str) {
 // False otherwise (keep running)
 bool TryParseArgs(int argc, char **argv, vector<Operation>& queue) {
     // No argument
-    if (argc == 1) {
+    if (argc <= 1) {
         cout << "Key generator for Windows 95/NT4.\n";
         cout << "GitHub: https://github.com/honguyenminh/Mod7KeyGen\n";
         cout << "Use --help or -h for more information\n";

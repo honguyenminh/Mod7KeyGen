@@ -1,9 +1,10 @@
 #include "main.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     // Operation queue
     std::vector<Operation> queue;
 
+    // TODO: reverse the result to "success" or similar
     bool stop = TryParseArgs(argc, argv, queue);
     if (stop) return 1;
 

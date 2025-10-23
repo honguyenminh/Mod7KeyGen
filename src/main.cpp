@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
     std::vector<Operation> queue;
 
     const bool parsedSuccessfully = TryParseArgs(argc, argv, queue);
-    if (parsedSuccessfully) return 1;
+    if (!parsedSuccessfully) return 1;
 
     /// Generate keys and output
     KeyGen keyGen;

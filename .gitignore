@@ -1,3 +1,4 @@
 # ignore build folder
 cmake-build-*/
 .idea/*
+build/

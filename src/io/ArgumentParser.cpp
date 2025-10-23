@@ -2,8 +2,10 @@
 #include "ConsoleOutput.h"
 
 #include <iostream>
+#include <cstring>
 #include <string>
 
+// yeah, im using namespace std. what can you do? fight me?
 using namespace std;
 
 bool IsNumber(const char* str) {
@@ -12,7 +14,7 @@ bool IsNumber(const char* str) {
 
 // Return true if args is parsed successfully
 // If parsing throws an error, return false (don't run anymore)
-bool TryParseArgs(int argc, char **argv, vector<Operation>& queue) {
+bool TryParseArgs(const int argc, char **argv, vector<Operation>& queue) {
     // No argument
     if (argc <= 1) {
         cout << "Key generator for Windows 95/NT4.\n";
@@ -55,11 +57,11 @@ bool TryParseArgs(int argc, char **argv, vector<Operation>& queue) {
         if (argv[i][1] == '-') {
             // Add operation to queue
             if (strcmp(argv[i], "--10-digit") == 0) {
-                queue.emplace_back(KeyType::Cd10Digit, keyNum);
+                queue.emplace_back(Cd10Digit, keyNum);
             } else if (strcmp(argv[i], "--11-digit") == 0) {
-                queue.emplace_back(KeyType::Cd11Digit, keyNum);
+                queue.emplace_back(Cd11Digit, keyNum);
             } else if (strcmp(argv[i], "--20-digit") == 0) {
-                queue.emplace_back(KeyType::Oem20Digit, keyNum);
+                queue.emplace_back(Oem20Digit, keyNum);
             } else {
                 InvalidArgs();
                 return false;
@@ -69,11 +71,11 @@ bool TryParseArgs(int argc, char **argv, vector<Operation>& queue) {
         else {
             // Add operation to queue
             if (strcmp(argv[i], "-10") == 0) {
-                queue.emplace_back(KeyType::Cd10Digit, keyNum);
+                queue.emplace_back(Cd10Digit, keyNum);
             } else if (strcmp(argv[i], "-11") == 0) {
-                queue.emplace_back(KeyType::Cd11Digit, keyNum);
+                queue.emplace_back(Cd11Digit, keyNum);
             } else if (strcmp(argv[i], "-20") == 0) {
-                queue.emplace_back(KeyType::Oem20Digit, keyNum);
+                queue.emplace_back(Oem20Digit, keyNum);
             } else {
                 InvalidArgs();
                 return false;

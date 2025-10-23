@@ -9,19 +9,19 @@ KeyGen::KeyGen() {
     // Initialize random engine to make quick pseudo random int with true random seed
     this->randomEngine = default_random_engine(seed);
     // Initialize uniform dist to limit range of random
-    this->randomDigit = uniform_int_distribution<short>('0', '9');
+    this->randomDigitDist = uniform_int_distribution<short>('0', '9');
 }
 
-void KeyGen::GeneratePrintKey(KeyType keyType) {
+void KeyGen::GeneratePrintKey(const KeyType keyType) {
     // 10-digit retail CD key
-    if (keyType == KeyType::Cd10Digit) {
+    if (keyType == Cd10Digit) {
         // First 3 digits, anything but 333, 444, ..., 999
         // Switch to c-string and strcmp if you need s p e e d & s p a c e
         // I sure don't
         string key = "---";
         do {
             for (int i = 0; i < 3; i++) {
-                key[i] = randomDigit(randomEngine);
+                key[i] = randomDigit();
             }
         } while (
             // TODO: fix this mess
@@ -41,16 +41,16 @@ void KeyGen::GeneratePrintKey(KeyType keyType) {
     }
 
     // 11-digit retail CD key (i.e. Office 97)
-    if (keyType == KeyType::Cd11Digit) {
+    if (keyType == Cd11Digit) {
         // First 3 digits can be anything
         char key[4];
         key[3] = 0; // c-string, null terminate
         for (int i = 0; i < 3; ++i) {
-            key[i] = randomDigit(randomEngine);
+            key[i] = randomDigit();
         }
         // 4th digit is 3rd digit + 1 or + 2, overflow if > 9
         // Roll a die for +1 or +2
-        char randomPlus = randomDigit(randomEngine) > 4 ? 1 : 2;
+        const char randomPlus = randomDigitDist(randomEngine) > 4 ? 1 : 2;
         // Overflow
         if ((key[2] - '0') + randomPlus > 9) {
             cout << key << randomPlus - 1;
@@ -78,10 +78,10 @@ void KeyGen::GeneratePrintKey(KeyType keyType) {
     else cout << tempDate;
 
     // - Next 2 digits is the year, 95 to 03 is valid
-    const char* validYear[9] = {"95", "96", "97", "98", "99", "00", "01", "02", "03"};
+    const char* validYear[9] = { "95", "96", "97", "98", "99", "00", "01", "02", "03" };
     tempDate = 9;
     while (tempDate == 9)
-        tempDate = (unsigned char) (randomDigit(randomEngine) - '0');
+        tempDate = static_cast<unsigned char>(randomDigit() - '0');
 
     cout << validYear[tempDate];
 
@@ -91,17 +91,17 @@ void KeyGen::GeneratePrintKey(KeyType keyType) {
 
     // Last five-digit segment can be anything, so randomly created
     for (char i = 0; i < 5; i++) {
-        cout << randomDigit(randomEngine);
+        cout << randomDigitDist(randomEngine);
     }
     cout << '\n';
 }
 
-string KeyGen::Mod7Generator(bool firstDigitIsZero) {
+string KeyGen::Mod7Generator(const bool firstDigitIsZero) {
     // Mod7 part is 7-digit long
     int digitSum;
     string key = "0------";
     // If first digit is zero, generate from the next digit only
-    char firstDigitIndex = firstDigitIsZero ? 1 : 0;
+    const char firstDigitIndex = firstDigitIsZero ? 1 : 0;
 
     // Digit sum must be divisible to 7
     // Last digit must be in range [1, 7]
@@ -111,9 +111,13 @@ string KeyGen::Mod7Generator(bool firstDigitIsZero) {
     do {
         digitSum = 0;
         for (char i = firstDigitIndex; i < 7; ++i) {
-            key[i] = static_cast<char>(randomDigit(randomEngine));
+            key[i] = randomDigit();
             digitSum += key[i] - '0';
         }
     } while (digitSum % 7 != 0 || key[6] > '7' || key[6] == '0');
     return key;
+}
+
+inline char KeyGen::randomDigit() {
+    return static_cast<char>(randomDigitDist(this->randomEngine));
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../header/models.h"
+#include "header/models.h"
 #include <random>
 #include <string>
 
@@ -19,5 +19,9 @@ private:
     // Initialize random engine to make quick pseudo random int with true random seed
     std::default_random_engine randomEngine;
     // Initialize uniform dist to limit range of random
-    std::uniform_int_distribution<short> randomDigit;
+    // This is typed short because that's the smallest int type allowed by uniform_int_distribution.
+    // char is not supported. Why?
+    std::uniform_int_distribution<short> randomDigitDist;
+
+    inline char randomDigit();
 };

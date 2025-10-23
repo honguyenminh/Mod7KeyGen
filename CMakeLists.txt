@@ -13,3 +13,5 @@ add_executable(Mod7KeyGen
         src/keygen/KeyGen.cpp
         src/keygen/KeyGen.h
 )
+
+target_include_directories(Mod7KeyGen PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
